@@ -1,2 +1,2 @@
 'this is my first addition to my coding collection, haha'
-'heyho'
+'heyho, das ist ne veränderung'
