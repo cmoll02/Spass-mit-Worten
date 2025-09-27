@@ -36,7 +36,7 @@ for Reihe in range(Reihen):
     Tabelle.append(Tabelle_Reihe)
 
 #Wörter laden
-with open("C:\\Users\\julia\\Downloads\\wortliste.txt", "r", encoding="utf-8") as f:
+with open("/Users/besitzer/PycharmProjects/Spass-mit-Worten/wordlist-german.txt", "r", encoding="utf-8") as f:
     alle_woerter = [zeile.strip() for zeile in f]
 fuenfer_woerter = [
     wort for wort in alle_woerter
