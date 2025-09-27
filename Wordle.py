@@ -5,7 +5,7 @@ import random
 pygame.init()
 
 #Fenster öffnen
-Breite, Hoehe = 400, 500
+Breite, Hoehe = 400, 800
 Fenster = pygame.display.set_mode((Breite, Hoehe))
 pygame.display.set_caption("Spass mit Worten - Wordle")
 clock = pygame.time.Clock()
@@ -43,7 +43,7 @@ fuenfer_woerter = [
     wort for wort in alle_woerter
     if len(wort) == 5 and wort[0].isupper()
 ]
-geheimes_wort = random.choice(fuenfer_woerter)
+geheimes_wort = random.choice(fuenfer_woerter).upper()
 
 
 #HIER ZEIGT ER AN, WAS DAS GEHEIME WORT IST!!!!!!!!
@@ -57,23 +57,20 @@ akt_Spalte = 0
 
 
 # Wort überprüfen Funktion prüfe_wort
+ergebnis = ["gray"] * 5
+geheime_buchstaben = list(geheimes_wort)
 def pruefe_wort(geratenes_wort, geheimes_wort):
-    ergebnis = ["gray"] * len(geratenes_wort)
-    geheime_buchstaben = list(geheimes_wort)
-
     # Richtige Positionen (grün)
     for i, buchstabe in enumerate(geratenes_wort):
         if buchstabe == geheime_buchstaben[i]:
             ergebnis[i] = "green"
-            geheime_buchstaben[i] = None
-
     # Falsche Position, aber vorhanden (gelb)
-    for i, buchstabe in enumerate(geratenes_wort):
-        if ergebnis[i] == "gray" and buchstabe in geheime_buchstaben:
-            ergebnis[i] = "yellow"
-            geheime_buchstaben[geheime_buchstaben.index(buchstabe)] = None
-
+    if ergebnis[i] != "green":
+        for i, buchstabe in enumerate(geratenes_wort):
+            if ergebnis[i] == "gray" and buchstabe in geheime_buchstaben:
+                ergebnis[i] = "yellow"
     return ergebnis
+print(ergebnis)
 
 
 spielaktiv = True
@@ -91,11 +88,17 @@ while spielaktiv:
                     akt_Spalte -= 1
                     Tabelle[akt_Reihe][akt_Spalte]["letter"] = ""
             elif event.key == pygame.K_RETURN:
-                if akt_Spalte == Spalten:  # ganze Zeile voll
-                    print("Wort eingeben:", "".join([cell["letter"] for cell in Tabelle[akt_Reihe]]))
+                # ganze Zeile voll
+                if akt_Spalte == Spalten:
+                    geratenes_Wort = "".join([cell["letter"] for cell in Tabelle[akt_Reihe]])
+                    print("Wort eingeben:", geratenes_Wort)
+                    #Einfärbung der Buchstaben
+                    pruefe_wort(geratenes_Wort, geheimes_wort)
 
-                    # nächste Zeile freigeben
-                    if akt_Reihe < Reihen - 1:
+                print(ergebnis)
+
+                #nächste Zeile freigeben
+                if akt_Reihe < Reihen - 1:
                         akt_Reihe += 1
                         akt_Spalte = 0
             elif event.unicode.isalpha() and akt_Spalte < Spalten:
