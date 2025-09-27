@@ -8,6 +8,7 @@ pygame.init()
 Breite, Hoehe = 400, 500
 Fenster = pygame.display.set_mode((Breite, Hoehe))
 pygame.display.set_caption("Spass mit Worten - Wordle")
+clock = pygame.time.Clock()
 
 #Farben definieren
 white = (255, 255, 255)
@@ -110,6 +111,8 @@ while spielaktiv:
                 text_rect = text_surface.get_rect(center=cell["rect"].center)
                 Fenster.blit(text_surface, text_rect)
 
+    pygame.display.update()
+    clock.tick(60)
     pygame.display.flip()
 
 pygame.quit()
