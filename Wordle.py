@@ -91,7 +91,7 @@ while spielaktiv:
         if event.type == pygame.QUIT:
             spielaktiv = False
 
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN and not game_over:    # für Beenden des Tippens nach Spielende
             if event.key == pygame.K_BACKSPACE:
                 if akt_Spalte > 0:
                     akt_Spalte -= 1
@@ -113,7 +113,6 @@ while spielaktiv:
                     if ergebnis == ['green'] * 5:
                         Auswertung = "Erfolg"
                         game_over = True
-                        # time.sleep(5)
 
                     elif akt_Reihe == 4:
                         Auswertung = "Misserfolg"
