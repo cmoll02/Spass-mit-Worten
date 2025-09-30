@@ -130,6 +130,7 @@ while spielaktiv:
 
 
 #Kästchen zeichnen
+    Fenster.blit(Bewertung_surf, Bewertung_rect)
     for Reihe in Tabelle:
         for cell in Reihe:
             farbe = black  # Standardfarbe für leere Felder
@@ -148,7 +149,6 @@ while spielaktiv:
             if cell["letter"] != "":
                 text_surface = FONT.render(cell["letter"], True, white)
                 text_rect = text_surface.get_rect(center=cell["rect"].center)
-                Fenster.blit(Bewertung_surf, Bewertung_rect)
                 Fenster.blit(text_surface, text_rect)
 
     pygame.display.update()
