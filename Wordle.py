@@ -3,6 +3,7 @@ print("Hallo, ich bins")
 import pygame
 import sys
 import random
+import time
 pygame.init()
 
 #Fenster öffnen
@@ -22,7 +23,7 @@ green = (0, 255, 0)
 FONT = pygame.font.SysFont("arial", 30)
 
 #Aufbau des Feldes
-Reihen, Spalten = 6, 5
+Reihen, Spalten = 5, 5
 cell_size = 60
 Abstand = 10
 Tabelle = []
@@ -55,6 +56,10 @@ print("Zufälliges Wort:", geheimes_wort)
 #Spielstatus
 akt_Reihe = 0
 akt_Spalte = 0
+Auswertung = "Viel Spaß"
+Bewertung_surf = FONT.render(Auswertung,True, "white")
+Bewertung_rect = Bewertung_surf.get_rect(center=(200,700))
+geratenes_Wort = ""
 
 
 # Wort überprüfen Funktion prüfe_wort
@@ -71,8 +76,11 @@ def pruefe_wort(geratenes_wort, geheimes_wort):
             if ergebnis[i] == "gray" and buchstabe in geheime_buchstaben:
                 ergebnis[i] = "yellow"
     return ergebnis
-print(ergebnis)
 
+def farbe_neut(geratenes_wort):
+    for i, buchstabe in enumerate(geratenes_wort):
+        ergebnis[i] = "gray"
+    return ergebnis
 
 spielaktiv = True
 while spielaktiv:
@@ -102,10 +110,20 @@ while spielaktiv:
 
                 print(ergebnis)
 
+                # Spiel-Auswertung
+                if ergebnis == ['green'] * 5:
+                    Auswertung = "Erfolg"
+                    time.sleep(5)
+
+                elif akt_Reihe == 5 and akt_Spalte == 5:
+                    Auswertung = "Misserfolg"
+                    exit()
+
                 #nächste Zeile freigeben
                 if akt_Reihe < Reihen - 1:
-                        akt_Reihe += 1
-                        akt_Spalte = 0
+                    akt_Reihe += 1
+                    akt_Spalte = 0
+                    farbe_neut(geratenes_Wort)
             elif event.unicode.isalpha() and akt_Spalte < Spalten:
                 Tabelle[akt_Reihe][akt_Spalte]["letter"] = event.unicode.upper()
                 akt_Spalte += 1
@@ -130,6 +148,7 @@ while spielaktiv:
             if cell["letter"] != "":
                 text_surface = FONT.render(cell["letter"], True, white)
                 text_rect = text_surface.get_rect(center=cell["rect"].center)
+                Fenster.blit(Bewertung_surf, Bewertung_rect)
                 Fenster.blit(text_surface, text_rect)
 
     pygame.display.update()
