@@ -23,7 +23,6 @@ green = (106, 170, 100)
 FONT = pygame.font.SysFont("arial", 30)
 
 # Aufbau des Feldes
-Reihen, Spalten = 5, 5
 cell_size = 60
 Abstand = 10
 Tabelle = []
