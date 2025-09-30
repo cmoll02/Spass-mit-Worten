@@ -55,7 +55,8 @@ print("Zufälliges Wort:", geheimes_wort)
 #Spielstatus
 akt_Reihe = 0
 akt_Spalte = 0
-
+game_over = False              #NEU
+won = False                    #NEU
 
 # Wort überprüfen Funktion prüfe_wort
 ergebnis = ["gray"] * 5
