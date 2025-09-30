@@ -14,8 +14,8 @@ clock = pygame.time.Clock()
 white = (255, 255, 255)
 black = (0, 0, 0)
 gray = (128, 128, 128)
-yellow = (201, 180, 88)
-green = (106, 170, 100)
+yellow = (230, 200, 50)
+green = (0, 255, 0)
 
 #Schrift
 FONT = pygame.font.SysFont("arial", 30)
@@ -37,7 +37,7 @@ for Reihe in range(Reihen):
     Tabelle.append(Tabelle_Reihe)
 
 #Wörter laden
-with open("/Users/besitzer/PycharmProjects/Spass-mit-Worten/wordlist-german.txt", "r", encoding="utf-8") as f:
+with open("wortliste.txt", "r", encoding="utf-8") as f:
     alle_woerter = [zeile.strip() for zeile in f]
 fuenfer_woerter = [
     wort for wort in alle_woerter
@@ -93,7 +93,11 @@ while spielaktiv:
                     geratenes_Wort = "".join([cell["letter"] for cell in Tabelle[akt_Reihe]])
                     print("Wort eingeben:", geratenes_Wort)
                     #Einfärbung der Buchstaben
-                    pruefe_wort(geratenes_Wort, geheimes_wort)
+                    ergebnis = pruefe_wort(geratenes_Wort, geheimes_wort)    #NEU
+
+                    # Farben in die Kästchen speichern            #NEU
+                    for i, farbe in enumerate(ergebnis):          #NEU
+                        Tabelle[akt_Reihe][i]["color"] = farbe          #NEU
 
                 print(ergebnis)
 
@@ -105,10 +109,23 @@ while spielaktiv:
                 Tabelle[akt_Reihe][akt_Spalte]["letter"] = event.unicode.upper()
                 akt_Spalte += 1
 
-    # Kästchen zeichnen
+
+#Kästchen zeichnen
     for Reihe in Tabelle:
         for cell in Reihe:
-            pygame.draw.rect(Fenster, white, cell["rect"], 2)  # Rahmen
+            farbe = black  # Standardfarbe für leere Felder
+            if "color" in cell:
+                if cell["color"] == "green":
+                    farbe = green
+                elif cell["color"] == "yellow":
+                    farbe = yellow
+                elif cell["color"] == "gray":
+                    farbe = gray
+
+            # Rechteck zeichnen
+            pygame.draw.rect(Fenster, farbe, cell["rect"])
+            pygame.draw.rect(Fenster, white, cell["rect"], 2)  #weißer Rahmen
+
             if cell["letter"] != "":
                 text_surface = FONT.render(cell["letter"], True, white)
                 text_rect = text_surface.get_rect(center=cell["rect"].center)
@@ -120,7 +137,3 @@ while spielaktiv:
 
 pygame.quit()
 sys.exit()
-
-
-#spielzug = input("Bitte Buchstabe eingeben: ")
-#print (spielzug)
