@@ -1,4 +1,5 @@
 print("Hallo")
+print("Hallo, ich bins")
 import pygame
 import sys
 import random
