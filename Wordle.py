@@ -1,7 +1,5 @@
 print("Hallo")
-print("Hallo, ich bins")
 import pygame
-import sys
 import random
 import time
 pygame.init()
@@ -108,16 +106,15 @@ while spielaktiv:
                     for i, farbe in enumerate(ergebnis):          #NEU
                         Tabelle[akt_Reihe][i]["color"] = farbe          #NEU
 
+                    # Spiel-Auswertung
+                    if ergebnis == ['green'] * 5:
+                        Auswertung = "Erfolg"
+                        # time.sleep(5)
+
+                    elif akt_Reihe == 5 and akt_Spalte == 5:
+                        Auswertung = "Misserfolg"
+                        exit()
                 print(ergebnis)
-
-                # Spiel-Auswertung
-                if ergebnis == ['green'] * 5:
-                    Auswertung = "Erfolg"
-                    time.sleep(5)
-
-                elif akt_Reihe == 5 and akt_Spalte == 5:
-                    Auswertung = "Misserfolg"
-                    exit()
 
                 #nächste Zeile freigeben
                 if akt_Reihe < Reihen - 1:
@@ -150,6 +147,10 @@ while spielaktiv:
                 text_surface = FONT.render(cell["letter"], True, white)
                 text_rect = text_surface.get_rect(center=cell["rect"].center)
                 Fenster.blit(text_surface, text_rect)
+
+    # Text unten anzeigen
+    Bewertung_surf = FONT.render(Auswertung, True, white)
+    Fenster.blit(Bewertung_surf, Bewertung_rect)
 
     pygame.display.update()
     clock.tick(60)

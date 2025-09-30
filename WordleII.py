@@ -1,28 +1,29 @@
 print("Hallo")
-print("hallo ich bins")
-print("huhu")
+print("Hallo, ich bins")
 import pygame
 import sys
 import random
-
+import time
 pygame.init()
 
-# Fenster öffnen
-Breite, Hoehe = 400, 500
+#Fenster öffnen
+Breite, Hoehe = 400, 800
 Fenster = pygame.display.set_mode((Breite, Hoehe))
 pygame.display.set_caption("Spass mit Worten - Wordle")
+clock = pygame.time.Clock()
 
-# Farben definieren
+#Farben definieren
 white = (255, 255, 255)
 black = (0, 0, 0)
 gray = (128, 128, 128)
-yellow = (201, 180, 88)
-green = (106, 170, 100)
+yellow = (230, 200, 50)
+green = (0, 255, 0)
 
-# Schrift
+#Schrift
 FONT = pygame.font.SysFont("arial", 30)
 
-# Aufbau des Feldes
+#Aufbau des Feldes
+Reihen, Spalten = 5, 5
 cell_size = 60
 Abstand = 10
 Tabelle = []
@@ -37,42 +38,57 @@ for Reihe in range(Reihen):
         Tabelle_Reihe.append({"rect": rect, "letter": ""})
     Tabelle.append(Tabelle_Reihe)
 
-# Wörter laden
-with open("C:\\Users\\julia\\Downloads\\wortliste.txt", "r", encoding="utf-8") as f:
+#Wörter laden
+with open("wortliste.txt", "r", encoding="utf-8") as f:
     alle_woerter = [zeile.strip() for zeile in f]
 fuenfer_woerter = [
     wort for wort in alle_woerter
     if len(wort) == 5 and wort[0].isupper()
 ]
-geheimes_wort = random.choice(fuenfer_woerter)
+geheimes_wort = random.choice(fuenfer_woerter).upper()
 
-# HIER ZEIGT ER AN, WAS DAS GEHEIME WORT IST!!!!!!!!
+
+#HIER ZEIGT ER AN, WAS DAS GEHEIME WORT IST!!!!!!!!
 print("Zufälliges Wort:", geheimes_wort)
 
-# Spielstatus
+
+
+#Spielstatus
 akt_Reihe = 0
 akt_Spalte = 0
+<<<<<<< HEAD
+game_over = False              #NEU
+won = False                    #NEU
+=======
+Auswertung = "Viel Spaß"
+Bewertung_surf = FONT.render(Auswertung,True, "white")
+Bewertung_rect = Bewertung_surf.get_rect(center=(200,700))
+geratenes_Wort = ""
 
+>>>>>>> origin/main
 
 # Wort überprüfen Funktion prüfe_wort
+ergebnis = ["gray"] * 5
+geheime_buchstaben = list(geheimes_wort)
 def pruefe_wort(geratenes_wort, geheimes_wort):
-    ergebnis = ["gray"] * len(geratenes_wort)
-    geheime_buchstaben = list(geheimes_wort)
-
     # Richtige Positionen (grün)
     for i, buchstabe in enumerate(geratenes_wort):
         if buchstabe == geheime_buchstaben[i]:
             ergebnis[i] = "green"
-            geheime_buchstaben[i] = None
+            geheime_buchstaben[i] = None  # markiert den Buchstaben als benutzt
 
     # Falsche Position, aber vorhanden (gelb)
     for i, buchstabe in enumerate(geratenes_wort):
         if ergebnis[i] == "gray" and buchstabe in geheime_buchstaben:
             ergebnis[i] = "yellow"
-            geheime_buchstaben[geheime_buchstaben.index(buchstabe)] = None
+            geheime_buchstaben[geheime_buchstaben.index(buchstabe)] = None  # markiert den Buchstaben als benutzt
 
     return ergebnis
 
+def farbe_neut(geratenes_wort):
+    for i, buchstabe in enumerate(geratenes_wort):
+        ergebnis[i] = "gray"
+    return ergebnis
 
 spielaktiv = True
 while spielaktiv:
@@ -89,26 +105,62 @@ while spielaktiv:
                     akt_Spalte -= 1
                     Tabelle[akt_Reihe][akt_Spalte]["letter"] = ""
             elif event.key == pygame.K_RETURN:
-                if akt_Spalte == Spalten:  # ganze Zeile voll
-                    print("Wort eingeben:", "".join([cell["letter"] for cell in Tabelle[akt_Reihe]]))
+                # ganze Zeile voll
+                if akt_Spalte == Spalten:
+                    geratenes_Wort = "".join([cell["letter"] for cell in Tabelle[akt_Reihe]])
+                    print("Wort eingeben:", geratenes_Wort)
+                    #Einfärbung der Buchstaben
+                    ergebnis = pruefe_wort(geratenes_Wort, geheimes_wort)    #NEU
 
-                    # nächste Zeile freigeben
-                    if akt_Reihe < Reihen - 1:
-                        akt_Reihe += 1
-                        akt_Spalte = 0
+                    # Farben in die Kästchen speichern            #NEU
+                    for i, farbe in enumerate(ergebnis):          #NEU
+                        Tabelle[akt_Reihe][i]["color"] = farbe          #NEU
+
+                print(ergebnis)
+
+                # Spiel-Auswertung
+                if ergebnis == ['green'] * 5:
+                    Auswertung = "Erfolg"
+                    time.sleep(5)
+
+                elif akt_Reihe == 5 and akt_Spalte == 5:
+                    Auswertung = "Misserfolg"
+                    exit()
+
+                #nächste Zeile freigeben
+                if akt_Reihe < Reihen - 1:
+                    akt_Reihe += 1
+                    akt_Spalte = 0
+                    farbe_neut(geratenes_Wort)
             elif event.unicode.isalpha() and akt_Spalte < Spalten:
                 Tabelle[akt_Reihe][akt_Spalte]["letter"] = event.unicode.upper()
                 akt_Spalte += 1
 
-    # Kästchen zeichnen
+
+#Kästchen zeichnen
     for Reihe in Tabelle:
         for cell in Reihe:
-            pygame.draw.rect(Fenster, white, cell["rect"], 2)  # Rahmen
+            farbe = black  # Standardfarbe für leere Felder
+            if "color" in cell:
+                if cell["color"] == "green":
+                    farbe = green
+                elif cell["color"] == "yellow":
+                    farbe = yellow
+                elif cell["color"] == "gray":
+                    farbe = gray
+
+            # Rechteck zeichnen
+            pygame.draw.rect(Fenster, farbe, cell["rect"])
+            pygame.draw.rect(Fenster, white, cell["rect"], 2)  #weißer Rahmen
+
             if cell["letter"] != "":
                 text_surface = FONT.render(cell["letter"], True, white)
                 text_rect = text_surface.get_rect(center=cell["rect"].center)
+                Fenster.blit(Bewertung_surf, Bewertung_rect)
                 Fenster.blit(text_surface, text_rect)
 
+    pygame.display.update()
+    clock.tick(60)
     pygame.display.flip()
 
 pygame.quit()
