@@ -55,8 +55,7 @@ print("Zufälliges Wort:", geheimes_wort)
 #Spielstatus
 akt_Reihe = 0
 akt_Spalte = 0
-game_over = False              #NEU
-won = False                    #NEU
+
 
 # Wort überprüfen Funktion prüfe_wort
 ergebnis = ["gray"] * 5
@@ -66,14 +65,11 @@ def pruefe_wort(geratenes_wort, geheimes_wort):
     for i, buchstabe in enumerate(geratenes_wort):
         if buchstabe == geheime_buchstaben[i]:
             ergebnis[i] = "green"
-            geheime_buchstaben[i] = None  # markiert den Buchstaben als benutzt
-
     # Falsche Position, aber vorhanden (gelb)
-    for i, buchstabe in enumerate(geratenes_wort):
-        if ergebnis[i] == "gray" and buchstabe in geheime_buchstaben:
-            ergebnis[i] = "yellow"
-            geheime_buchstaben[geheime_buchstaben.index(buchstabe)] = None  # markiert den Buchstaben als benutzt
-
+    if ergebnis[i] != "green":
+        for i, buchstabe in enumerate(geratenes_wort):
+            if ergebnis[i] == "gray" and buchstabe in geheime_buchstaben:
+                ergebnis[i] = "yellow"
     return ergebnis
 print(ergebnis)
 
