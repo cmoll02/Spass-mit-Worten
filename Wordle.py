@@ -69,10 +69,11 @@ def pruefe_wort(geratenes_wort, geheimes_wort):
             geheime_buchstaben[i] = None  # markiert den Buchstaben als benutzt
 
     # Falsche Position, aber vorhanden (gelb)
-    if ergebnis[i] != "green":
-        for i, buchstabe in enumerate(geratenes_wort):
-            if ergebnis[i] == "gray" and buchstabe in geheime_buchstaben:
-                ergebnis[i] = "yellow"
+    for i, buchstabe in enumerate(geratenes_wort):
+        if ergebnis[i] == "gray" and buchstabe in geheime_buchstaben:
+            ergebnis[i] = "yellow"
+            geheime_buchstaben[geheime_buchstaben.index(buchstabe)] = None  # markiert den Buchstaben als benutzt
+
     return ergebnis
 print(ergebnis)
 
