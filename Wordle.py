@@ -45,24 +45,18 @@ fuenfer_woerter = [
 ]
 geheimes_wort = random.choice(fuenfer_woerter).upper()
 
+#print(geheimes_wort)    soll nicht angezeigt werden im Spiel (war nur für uns zur Überprüfung)
 
-#HIER ZEIGT ER AN, WAS DAS GEHEIME WORT IST!!!!!!!!
-print("Zufälliges Wort:", geheimes_wort)
-
-
-
-#Spielstatus
+#Spielstatus und paar Variablendefinitionen
 akt_Reihe = 0
 akt_Spalte = 0
 game_over = False
-won = False
 Auswertung = "Viel Spaß"
 Bewertung_surf = FONT.render(Auswertung,True, "white")
-Bewertung_rect = Bewertung_surf.get_rect(center=(200,700))
+Bewertung_rect = Bewertung_surf.get_rect(center=(200,600))
 geratenes_Wort = ""
 
-
-# Wort überprüfen Funktion prüfe_wort
+#Wort überprüfen
 ergebnis = ["gray"] * 5
 geheime_buchstaben = list(geheimes_wort)
 def pruefe_wort(geratenes_wort, geheimes_wort):
@@ -86,7 +80,7 @@ spielaktiv = True
 while spielaktiv:
     Fenster.fill(black)
 
-    # Ereignisse abfragen
+    #Ereignisse abfragen
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             spielaktiv = False
@@ -101,21 +95,22 @@ while spielaktiv:
                 if akt_Spalte == Spalten:
                     geratenes_Wort = "".join([cell["letter"] for cell in Tabelle[akt_Reihe]])
                     print("Wort eingeben:", geratenes_Wort)
+
                     #Einfärbung der Buchstaben
-                    ergebnis = pruefe_wort(geratenes_Wort, geheimes_wort)    #NEU
+                    ergebnis = pruefe_wort(geratenes_Wort, geheimes_wort)
 
-                    # Farben in die Kästchen speichern            #NEU
-                    for i, farbe in enumerate(ergebnis):          #NEU
-                        Tabelle[akt_Reihe][i]["color"] = farbe          #NEU
+                    # Farben in die Kästchen speichern
+                    for i, farbe in enumerate(ergebnis):
+                        Tabelle[akt_Reihe][i]["color"] = farbe
 
 
-                    # Spiel-Auswertung
+                    #Spiel-Auswertung
                     if ergebnis == ['green'] * 5:
                         Auswertung = "Erfolg"
                         game_over = True
 
                     elif akt_Reihe == 4:
-                        Auswertung = "Misserfolg"
+                        Auswertung = f"Misserfolg!\nDas Wort war:\n{geheimes_wort}"     #'NEU'
                         game_over = True
                     if game_over:
                         time.sleep(1)
@@ -130,9 +125,8 @@ while spielaktiv:
                 Tabelle[akt_Reihe][akt_Spalte]["letter"] = event.unicode.upper()
                 akt_Spalte += 1
 
-
 #Kästchen zeichnen
-    Fenster.blit(Bewertung_surf, Bewertung_rect)
+    #Fenster.blit(Bewertung_surf, Bewertung_rect)
     for Reihe in Tabelle:
         for cell in Reihe:
             farbe = black  # Standardfarbe für leere Felder
@@ -153,9 +147,13 @@ while spielaktiv:
                 text_rect = text_surface.get_rect(center=cell["rect"].center)
                 Fenster.blit(text_surface, text_rect)
 
-    # Text unten anzeigen
+    #Text unten anzeigen
     Bewertung_surf = FONT.render(Auswertung, True, white)
-    Fenster.blit(Bewertung_surf, Bewertung_rect)
+    #Fenster.blit(Bewertung_surf, Bewertung_rect)
+    for i, zeile in enumerate(Auswertung.split("\n")):
+        text_surface = FONT.render(zeile, True, white)
+        text_rect = text_surface.get_rect(center=(200, 600 + i * 40))
+        Fenster.blit(text_surface, text_rect)
 
     pygame.display.update()
     clock.tick(60)
