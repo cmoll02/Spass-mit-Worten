@@ -54,6 +54,8 @@ print("Zufälliges Wort:", geheimes_wort)
 #Spielstatus
 akt_Reihe = 0
 akt_Spalte = 0
+game_over = False
+won = False
 Auswertung = "Viel Spaß"
 Bewertung_surf = FONT.render(Auswertung,True, "white")
 Bewertung_rect = Bewertung_surf.get_rect(center=(200,700))
@@ -106,14 +108,18 @@ while spielaktiv:
                     for i, farbe in enumerate(ergebnis):          #NEU
                         Tabelle[akt_Reihe][i]["color"] = farbe          #NEU
 
+
                     # Spiel-Auswertung
                     if ergebnis == ['green'] * 5:
                         Auswertung = "Erfolg"
+                        game_over = True
                         # time.sleep(5)
 
-                    elif akt_Reihe == 5 and akt_Spalte == 5:
+                    elif akt_Reihe == 4:
                         Auswertung = "Misserfolg"
-                        exit()
+                        game_over = True
+                    if game_over:
+                        time.sleep(1)
                 print(ergebnis)
 
                 #nächste Zeile freigeben
